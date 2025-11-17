@@ -94,5 +94,19 @@ export const signIn = async (req, res, next) => {
 }
 
 export const signOut = async (req, res, next) => {
+    try{
+        res.clearCookie('jwt',{
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/'
+        });
 
+        res.status(200).json({
+            success:true,
+            message: 'token deleted'
+        });
+    }catch(error){
+        next(error);
+    }
 }
