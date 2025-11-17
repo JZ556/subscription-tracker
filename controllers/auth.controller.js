@@ -27,6 +27,12 @@ export const signUp = async (req, res, next) => {
 
         const token = jwt.sign({userId: newUsers[0]._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN})
 
+        res.cookie('jwt', token,{
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 86400000
+        })
+
         await session.commitTransaction();
         session.endSession();
 
@@ -66,6 +72,12 @@ export const signIn = async (req, res, next) => {
         }
 
         const token = jwt.sign({userId:user._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
+
+        res.cookie('jwt',token,{
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 86400000
+        })
 
         res.status(200).json({
             success: true,
